@@ -2,7 +2,7 @@
 
 Projeto da avaliação de Computação em Nuvem, desenvolvido por etapas.
 
-## Etapa atual: TAREFA 2
+## Etapa atual: TAREFA 3
 
 Estrutura inicial do repositório e arquivos fornecidos no Apêndice A:
 
@@ -36,4 +36,16 @@ Para construir apenas a imagem web:
 docker build -t achados-web:local ./app
 ```
 
-O `docker-compose.yml` será implementado na TAREFA 3; ainda não é possível subir o ambiente completo. O arquivo `.env` é local e não deve ser entregue.
+## Orquestração (TAREFA 3)
+
+O `docker-compose.yml` conecta os serviços `web` e `db` pela rede `rede_interna`. Somente a aplicação publica uma porta no host: `8080:5000`. O nome `db` funciona como endereço interno do PostgreSQL. O `healthcheck` usa `pg_isready`, e `web` espera o banco ficar saudável antes de iniciar.
+
+Os volumes nomeados `dados_banco` e `fotos` guardam, respectivamente, os dados do PostgreSQL e os arquivos de `/app/uploads`. O arquivo `db/init.sql` é montado somente para leitura na pasta de inicialização do PostgreSQL e executado quando o volume do banco é criado pela primeira vez.
+
+As três chaves `POSTGRES_DB`, `POSTGRES_USER` e `POSTGRES_PASSWORD` vêm do `.env`. O Compose passa os valores correspondentes para a aplicação como `DB_NAME`, `DB_USER` e `DB_PASSWORD`. O `.env` é local, está no `.gitignore` e não deve ser entregue.
+
+Para subir o ambiente completo:
+
+```sh
+docker compose up -d --build
+```
