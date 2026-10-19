@@ -1,0 +1,18 @@
+﻿docker.exe :  Container achadosperdidos-db-1  Running
+No C:\Users\55639\OneDrive\Documentos\GitHub\Achados&Perdidos\docs\testar-tarefa6.ps1:33 caractere:9
++         & docker compose up -d --scale web=3 2>&1 | Out-File -FilePat ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container achadosperdidos-db-1  Running:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container achadosperdidos-web-1  Running
+ Container achadosperdidos-web-3  Creating
+ Container achadosperdidos-web-2  Creating
+ Container achadosperdidos-web-3  Created
+ Container achadosperdidos-web-2  Created
+ Container achadosperdidos-db-1  Waiting
+ Container achadosperdidos-db-1  Healthy
+ Container achadosperdidos-web-2  Starting
+Error response from daemon: failed to set up container networking: driver failed programming external connectivity on 
+endpoint achadosperdidos-web-2 (20cff3861a571ca933743cd5aa04c1f0b2ecdf7db0b293e196f5bff387dd38b2): Bind for 
+0.0.0.0:8080 failed: port is already allocated

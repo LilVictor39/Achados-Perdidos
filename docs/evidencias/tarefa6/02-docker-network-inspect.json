@@ -1,0 +1,54 @@
+﻿[
+    {
+        "Name": "achadosperdidos_rede_interna",
+        "Id": "9fd566711fbcb841fd0aaa1c116dfdc8bdb0510acd867b276bb7ba4c7beb6c59",
+        "Created": "2026-10-19T21:12:41.822506739Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16",
+                    "Gateway": "172.20.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "058ebb2d13a86ee73fdb3298b9426a72f5104a09cbb9b0e51dcc993ff4a8a719": {
+                "Name": "achadosperdidos-db-1",
+                "EndpointID": "6b7c7ea6dc15912d12116b5e3744c9c2df36c35fa3cb214c5c18f0b43ef345d2",
+                "MacAddress": "4a:f2:e1:7b:47:5e",
+                "IPv4Address": "172.20.0.2/16",
+                "IPv6Address": ""
+            },
+            "b070ef2aaba8d1ac4eb12e97651b7af00605fc56c8f643657928ef472317080a": {
+                "Name": "achadosperdidos-web-1",
+                "EndpointID": "ac863c808d670a66b9cb4e46c20b1b04c484aa036953e8f3b95e7085c7c11cdd",
+                "MacAddress": "ee:fc:96:b7:b3:78",
+                "IPv4Address": "172.20.0.3/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {
+            "com.docker.network.enable_ipv4": "true",
+            "com.docker.network.enable_ipv6": "false"
+        },
+        "Labels": {
+            "com.docker.compose.config-hash": "3f1cfec1c2a22a5eeecacd799d1c1006783b4481240324b96ec0ce20e5dfa430",
+            "com.docker.compose.network": "rede_interna",
+            "com.docker.compose.project": "achadosperdidos",
+            "com.docker.compose.version": "2.36.0"
+        }
+    }
+]

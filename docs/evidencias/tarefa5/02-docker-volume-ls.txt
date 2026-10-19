@@ -1,0 +1,12 @@
+﻿DRIVER    VOLUME NAME
+local     achadosperdidos_dados_banco
+local     achadosperdidos_fotos
+local     django-docker_dados-postgres
+local     django-docker_media-uploads
+local     django-docker_static-files
+local     loja-docker_dados-banco
+local     loja-docker_dados-objetos
+local     projeto_media_volume
+local     projeto_postgres_data
+local     projeto_static_volume
+local     teste_volumes

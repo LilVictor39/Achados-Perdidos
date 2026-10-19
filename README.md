@@ -1,51 +1,102 @@
 # Achados & Perdidos
 
-Projeto da avaliação de Computação em Nuvem, desenvolvido por etapas.
+API de achados e perdidos para a avaliação de Computação em Nuvem. O projeto demonstra uma aplicação Flask em contêiner, PostgreSQL, rede interna e persistência de dados e fotos em volumes Docker.
 
-## Etapa atual: TAREFA 3
+## Pré-requisitos
 
-Estrutura inicial do repositório e arquivos fornecidos no Apêndice A:
+- Docker Desktop iniciado, com Docker Compose disponível (`docker compose version`).
+- PowerShell para executar os roteiros de teste incluídos. Os comandos básicos do Compose também funcionam em outro terminal.
+- Porta 8080 livre no computador.
 
-```text
-achados-perdidos/
-├── app/
-│   ├── app.py
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   └── .dockerignore
-├── db/
-│   └── init.sql
-├── docs/
-├── docker-compose.yml
-├── .env.example
-├── .gitignore
-└── README.md
+Execute os comandos na pasta raiz do projeto.
+
+## Configurar e subir
+
+1. Se ainda não existir `.env`, crie o arquivo local de configuração a partir do modelo:
+
+   ```powershell
+   Copy-Item .env.example .env
+   notepad .env
+   ```
+
+2. Ajuste `POSTGRES_DB`, `POSTGRES_USER` e, principalmente, `POSTGRES_PASSWORD` no `.env`. Use uma senha própria. O arquivo `.env` está no `.gitignore` e não deve ser enviado ao repositório.
+3. Confira a configuração e inicie os serviços:
+
+   ```powershell
+   docker compose config --quiet
+   docker compose up -d --build
+   docker compose ps
+   ```
+
+O PostgreSQL precisa ficar `healthy`; a aplicação `web` fica disponível em `http://localhost:8080`. A primeira subida pode demorar enquanto a imagem é construída e o banco inicia. `db/init.sql` cria a tabela e três itens de exemplo somente quando o volume do banco está vazio.
+
+## Testar
+
+Consulta rápida no PowerShell:
+
+```powershell
+curl.exe http://localhost:8080/health
+curl.exe http://localhost:8080/itens
+curl.exe http://localhost:8080/estatisticas
 ```
 
-O `app.py` usa `/app/uploads` para as fotos, procura o banco no host `db` quando `DB_HOST` não é informado e espera as variáveis `DB_PORT`, `DB_NAME`, `DB_USER` e `DB_PASSWORD`.
+Para executar e salvar as provas funcionais da TAREFA 4:
 
-## Imagem da aplicação (TAREFA 2)
-
-O `app/Dockerfile` usa `python:3.12-slim`. Ele copia e instala `requirements.txt` antes de copiar `app.py`, para que uma alteração no código não obrigue a reinstalar as dependências. A instalação usa `--no-cache-dir` para não guardar o cache do pip na imagem.
-
-O diretório `/app/uploads` pertence ao usuário `app`, que executa o processo sem privilégios de root. A porta 5000 é documentada com `EXPOSE`, e o Gunicorn escuta em `0.0.0.0:5000` para aceitar conexões encaminhadas ao contêiner. O `.dockerignore` exclui `.env`, `__pycache__/` e arquivos `.pyc` do contexto de build.
-
-Para construir apenas a imagem web:
-
-```sh
-docker build -t achados-web:local ./app
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\testar-tarefa4.ps1
 ```
 
-## Orquestração (TAREFA 3)
+O roteiro testa saúde, lista, filtro, cadastro com foto, recuperação da foto, estatísticas e logs. As saídas estão em [evidências da TAREFA 4](docs/evidencias/tarefa4/resultado.md). Se apenas os logs faltarem, use `-ApenasLogs` no fim do comando.
 
-O `docker-compose.yml` conecta os serviços `web` e `db` pela rede `rede_interna`. Somente a aplicação publica uma porta no host: `8080:5000`. O nome `db` funciona como endereço interno do PostgreSQL. O `healthcheck` usa `pg_isready`, e `web` espera o banco ficar saudável antes de iniciar.
+Para repetir a prova de persistência da TAREFA 5:
 
-Os volumes nomeados `dados_banco` e `fotos` guardam, respectivamente, os dados do PostgreSQL e os arquivos de `/app/uploads`. O arquivo `db/init.sql` é montado somente para leitura na pasta de inicialização do PostgreSQL e executado quando o volume do banco é criado pela primeira vez.
-
-As três chaves `POSTGRES_DB`, `POSTGRES_USER` e `POSTGRES_PASSWORD` vêm do `.env`. O Compose passa os valores correspondentes para a aplicação como `DB_NAME`, `DB_USER` e `DB_PASSWORD`. O `.env` é local, está no `.gitignore` e não deve ser entregue.
-
-Para subir o ambiente completo:
-
-```sh
-docker compose up -d --build
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\testar-tarefa5.ps1 -RemoverVolumes
 ```
+
+Esse roteiro cadastra itens de teste, verifica `down` + `up`, inspeciona volumes e, ao final, **apaga os dados dos volumes** com `down -v` antes de subir novamente. Execute apenas quando não houver dados que queira preservar. Os resultados anteriores estão em [evidências da TAREFA 5](docs/evidencias/tarefa5/resultado.md).
+
+Para gerar as duas evidências adicionais da TAREFA 6 e registrar a tentativa de escala:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\docs\testar-tarefa6.ps1
+```
+
+## Rotas da API
+
+| Método | Rota | Entrada | Resultado |
+| --- | --- | --- | --- |
+| GET | `/health` | Nenhuma | Estado da API, conexão com o banco e nome do contêiner. |
+| GET | `/itens` | Filtro opcional `?local=Biblioteca` | Lista de itens cadastrados. |
+| POST | `/itens` | Formulário `multipart/form-data` com `descricao`, `local` e `foto` opcional | Cria item; retorna ID e nome da foto com HTTP 201. |
+| GET | `/fotos/<nome>` | Nome de foto retornado pela API | Arquivo da foto. |
+| GET | `/estatisticas` | Nenhuma | Quantidade de itens no banco e de arquivos no volume de fotos. |
+
+Exemplo de cadastro com foto existente no computador:
+
+```powershell
+curl.exe -X POST http://localhost:8080/itens -F "descricao=Chave" -F "local=Biblioteca" -F "foto=@C:\caminho\foto.png"
+```
+
+Se quiser cadastrar sem foto, omita o último `-F`.
+
+## Parar ou destruir o ambiente
+
+```powershell
+docker compose down
+```
+
+Esse comando remove contêineres e a rede do projeto, mas preserva `dados_banco` e `fotos`. Para subir novamente, use `docker compose up -d`.
+
+```powershell
+docker compose down -v
+```
+
+Esse comando também remove os dois volumes e **apaga definitivamente os itens cadastrados e as fotos**. Na próxima subida, o banco executa `init.sql` de novo e recria os três itens de exemplo. A imagem construída continua no Docker; se precisar reconstruí-la, use `docker compose up -d --build`.
+
+## Arquivos de entrega e defesa
+
+- [Diagrama da arquitetura](docs/arquitetura.md): host, portas, rede, contêineres e armazenamento.
+- [Relatório técnico](docs/RELATORIO.md): Dockerfile, Compose, fluxo do POST e persistência.
+- [Evidências](docs/evidencias/README.md): resultados das TAREFAS 4 e 5, inspeção de rede e imagem.
+- [Reflexão e equivalência em nuvem](docs/REFLEXAO.md): sete respostas e tabela Azure/AWS/Google Cloud.

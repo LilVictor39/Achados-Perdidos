@@ -1,0 +1,16 @@
+﻿REPOSITORY            TAG         IMAGE ID       CREATED         SIZE
+achadosperdidos-web   latest      6fa90bbf73ae   5 hours ago     219MB
+django-docker-web     latest      3586db878a6d   3 weeks ago     269MB
+postgres              16-alpine   721873c34ceb   4 weeks ago     419MB
+projeto-web           latest      7e795eb2771f   4 weeks ago     537MB
+magnogay              teste       4ede088a4810   6 weeks ago     386MB
+postgres              16          f1c3376c26f2   7 weeks ago     636MB
+nginx                 latest      b34848eff6db   7 weeks ago     238MB
+magnogay              1.0         06aa4afff09e   8 weeks ago     183MB
+ubuntu                latest      2260313b31c8   2 months ago    157MB
+redis                 alpine      978f0e01593e   2 months ago    160MB
+traefik/whoami        latest      c4717a8d1f01   2 months ago    19.2MB
+nginx                 alpine      4a73073bd557   3 months ago    92.7MB
+hello-world           latest      5dd0d3e6e255   7 months ago    20.4kB
+minio/minio           latest      14cea493d9a3   13 months ago   241MB
+minio/mc              latest      a7fe349ef4bd   13 months ago   117MB

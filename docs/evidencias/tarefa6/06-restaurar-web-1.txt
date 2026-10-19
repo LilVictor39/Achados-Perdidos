@@ -1,0 +1,18 @@
+﻿docker.exe :  Container achadosperdidos-db-1  Running
+No C:\Users\55639\OneDrive\Documentos\GitHub\Achados&Perdidos\docs\testar-tarefa6.ps1:37 caractere:9
++         & docker compose up -d --scale web=1 2>&1 | Out-File -FilePat ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( Container achadosperdidos-db-1  Running:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container achadosperdidos-web-1  Running
+ Container achadosperdidos-web-3  Stopping
+ Container achadosperdidos-web-2  Stopping
+ Container achadosperdidos-web-2  Stopped
+ Container achadosperdidos-web-2  Removing
+ Container achadosperdidos-web-3  Stopped
+ Container achadosperdidos-web-3  Removing
+ Container achadosperdidos-web-2  Removed
+ Container achadosperdidos-web-3  Removed
+ Container achadosperdidos-db-1  Waiting
+ Container achadosperdidos-db-1  Healthy

@@ -1,0 +1,1 @@
+﻿[{"Type":"volume","Name":"achadosperdidos_fotos","Source":"/var/lib/docker/volumes/achadosperdidos_fotos/_data","Destination":"/app/uploads","Driver":"local","Mode":"rw","RW":true,"Propagation":""}]

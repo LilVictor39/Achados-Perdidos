@@ -1,0 +1,68 @@
+﻿Compose can now delegate builds to bake for better performance.
+ To do so, set COMPOSE_BAKE=true.
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [web internal] load build definition from Dockerfile
+#1 transferring dockerfile: 419B 0.0s done
+#1 DONE 0.0s
+
+#2 [web internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 1.1s
+
+#3 [web internal] load .dockerignore
+#3 transferring context: 97B 0.0s done
+#3 DONE 0.1s
+
+#4 [web internal] load build context
+#4 DONE 0.0s
+
+#5 [web 1/6] FROM docker.io/library/python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1
+#5 resolve docker.io/library/python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1 0.1s done
+#5 DONE 0.1s
+
+#4 [web internal] load build context
+#4 transferring context: 63B done
+#4 DONE 0.0s
+
+#6 [web 2/6] WORKDIR /app
+#6 CACHED
+
+#7 [web 3/6] COPY requirements.txt ./requirements.txt
+#7 CACHED
+
+#8 [web 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [web 5/6] COPY app.py ./app.py
+#9 CACHED
+
+#10 [web 6/6] RUN groupadd --system app &&     useradd --system --gid app --no-create-home app &&     mkdir -p /app/uploads &&     chown app:app /app/uploads
+#10 CACHED
+
+#11 [web] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:8817978e7c609b4ba6f0e2d3fae621dd88f3cc2774a6788ac054bef983a82410 done
+#11 exporting config sha256:389bea6823b0ec31ddf81b737607769a9c3ac987c278b574b2d97ff3472480c7 done
+#11 exporting attestation manifest sha256:be1a3ef2f8bc3b63bedd93287040cc58df1c731033e8d35ca8aa9e483d5ccd70 0.0s done
+#11 exporting manifest list sha256:cb0f484aca7d66d2b45d9d92b26086a86476e2a85e5314f7aa4231f12bad0190
+#11 exporting manifest list sha256:cb0f484aca7d66d2b45d9d92b26086a86476e2a85e5314f7aa4231f12bad0190 0.0s done
+#11 naming to docker.io/library/achadosperdidos-web:latest done
+#11 unpacking to docker.io/library/achadosperdidos-web:latest 0.0s done
+#11 DONE 0.2s
+
+#12 [web] resolving provenance for metadata file
+#12 DONE 0.0s
+docker.exe :  web  Built
+No C:\Users\55639\OneDrive\Documentos\GitHub\Achados&Perdidos\docs\testar-tarefa4.ps1:15 caractere:19
++         $output = & docker @arguments 2>&1
++                   ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( web  Built:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ Container achadosperdidos-db-1  Running
+ Container achadosperdidos-web-1  Recreate
+ Container achadosperdidos-web-1  Recreated
+ Container achadosperdidos-db-1  Waiting
+ Container achadosperdidos-db-1  Healthy
+ Container achadosperdidos-web-1  Starting
+ Container achadosperdidos-web-1  Started

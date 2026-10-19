@@ -1,0 +1,9 @@
+﻿django-docker_dados-postgres
+django-docker_media-uploads
+django-docker_static-files
+loja-docker_dados-banco
+loja-docker_dados-objetos
+projeto_media_volume
+projeto_postgres_data
+projeto_static_volume
+teste_volumes
