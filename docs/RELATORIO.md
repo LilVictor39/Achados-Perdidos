@@ -1,5 +1,14 @@
 # Relatório técnico — TAREFA 6
 
+Este relatório explica como a imagem e o ambiente são montados e acompanha uma requisição de cadastro até os dois volumes. O [diagrama da arquitetura](arquitetura.md) mostra esses componentes em conjunto.
+
+| Parte exigida | Onde encontrar |
+| --- | --- |
+| **a)** Instruções e ordem do Dockerfile | [Imagem da aplicação](#a-dockerfile-e-ordem-das-instruções) |
+| **b)** Blocos do Compose | [Orquestração](#b-blocos-do-compose) |
+| **c)** `POST /itens` com foto | [Caminho da requisição](#c-caminho-de-post-itens-com-foto) |
+| **d)** Ciclo de vida dos volumes | [Persistência](#d-ciclo-de-vida-dos-volumes) |
+
 ## a) Dockerfile e ordem das instruções
 
 Arquivo: [`app/Dockerfile`](../app/Dockerfile).
@@ -16,7 +25,7 @@ Arquivo: [`app/Dockerfile`](../app/Dockerfile).
 | `EXPOSE 5000` | Documenta a porta interna; a publicação em `8080` é feita pelo Compose. |
 | `CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]` | Inicia a aplicação Flask com Gunicorn, escutando nas interfaces do contêiner. |
 
-A ordem separa dependências e código para aproveitar o cache do build. O usuário é criado antes de `USER app`, pois criar conta e ajustar dono exige privilégios durante a construção. `EXPOSE` e `CMD` ficam no fim porque descrevem a execução da imagem pronta.
+**Por que essa ordem?** Separar dependências e código permite aproveitar o cache do build. O usuário é criado antes de `USER app`, pois criar conta e ajustar dono exige privilégios durante a construção. `EXPOSE` e `CMD` descrevem a execução da imagem pronta; `EXPOSE` não publica a porta no host.
 
 ## b) Blocos do Compose
 
@@ -38,6 +47,8 @@ Arquivo: [`docker-compose.yml`](../docker-compose.yml).
 | `networks.rede_interna` | Cria uma rede bridge com DNS entre os serviços. |
 | `volumes.dados_banco` e `volumes.fotos` | Declara os dois volumes nomeados, gerenciados pelo Docker. |
 
+O banco não tem bloco `ports`: a aplicação o acessa pela rede do Compose, sem expor a porta 5432 no host. A única porta publicada é `8080:5000`, no serviço `web`.
+
 ## c) Caminho de `POST /itens` com foto
 
 1. `curl.exe` envia `multipart/form-data` para `http://localhost:8080/itens`, contendo `descricao`, `local` e o arquivo `foto`.
@@ -48,12 +59,18 @@ Arquivo: [`docker-compose.yml`](../docker-compose.yml).
 6. O `INSERT` grava descrição, local e nome da foto na tabela `itens`; os arquivos de dados do PostgreSQL ficam em `/var/lib/postgresql/data`, montado no volume `dados_banco`.
 7. O banco confirma a transação quando a conexão sai do bloco `with`; a API responde HTTP 201 com o ID e o nome gerado para a foto.
 
-O arquivo e a linha no banco são gravados por operações separadas: se o `INSERT` falhar depois de `foto.save()`, pode restar uma foto sem item. O código fornecido não faz limpeza compensatória.
+**Limite do código fornecido:** o arquivo e a linha no banco são gravados por operações separadas. Se o `INSERT` falhar depois de `foto.save()`, pode restar uma foto sem item; a aplicação não faz limpeza compensatória.
 
 ## d) Ciclo de vida dos volumes
 
 Os volumes são criados na primeira subida e sobrevivem à recriação dos contêineres. Na [prova da TAREFA 5](evidencias/tarefa5/resultado.md), havia 6 itens e 3 fotos antes de `docker compose down`; após `docker compose up -d`, continuaram 6 e 3. O `down` remove contêineres e rede, preservando os volumes nomeados.
 
 `docker compose down -v` remove também `dados_banco` e `fotos`. Depois da nova subida, a prova mostrou 3 itens e 0 fotos. O PostgreSQL detectou o diretório de dados vazio e executou `db/init.sql` novamente, inserindo os três exemplos. Editar `init.sql` quando o volume já contém um banco não reaplica o script automaticamente; para preservar dados, é necessária uma migração SQL.
+
+| Comando | Contêineres e rede | Dados dos volumes |
+| --- | --- | --- |
+| `docker compose down` | Removidos | Preservados |
+| `docker compose up -d` | Recriados | Reutilizados |
+| `docker compose down -v` | Removidos | Removidos |
 
 As montagens e os locais físicos observados estão em [inspeção do banco](evidencias/tarefa5/02-inspect-dados-banco.json), [inspeção das fotos](evidencias/tarefa5/02-inspect-fotos.json) e [localização](evidencias/tarefa5/02-localizacao.md).

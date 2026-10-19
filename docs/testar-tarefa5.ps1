@@ -64,7 +64,14 @@ function Wait-Health {
     throw 'A aplicacao nao ficou saudavel em 60 segundos.'
 }
 
-$summary = @('# TAREFA 5 - prova de persistencia', '')
+$summary = @(
+    '# TAREFA 5 - prova de persistencia',
+    '',
+    'Resumo gerado pelo roteiro da execução atual. As respostas e saidas originais estão nos arquivos numerados desta pasta.',
+    '',
+    '## Verificações',
+    ''
+)
 Push-Location $projectRoot
 try {
     Run-Docker '00-compose-up.txt' @('compose', 'up', '-d', '--build') | Out-Null
@@ -101,7 +108,7 @@ try {
     $statsBeforeRecreate = Get-Content -Raw -LiteralPath $statsBeforeRecreatePath | ConvertFrom-Json
     if ($statsBeforeRecreate.itens_no_banco -lt ($statsInitial.itens_no_banco + 2) -or
         $statsBeforeRecreate.fotos_no_volume -lt ($statsInitial.fotos_no_volume + 2)) {
-        throw 'Os dois cadastros com foto nao apareceram nas estatisticas.'
+        throw 'Os dois cadastros com foto não apareceram nas estatisticas.'
     }
     Run-Docker '01-compose-down.txt' @('compose', 'down') | Out-Null
     Run-Docker '01-compose-up-novamente.txt' @('compose', 'up', '-d') | Out-Null
@@ -147,10 +154,14 @@ try {
     @(
         '# Localizacao dos volumes',
         '',
-        "- Banco: $($dbVolume.Name) -> $($dbInfo.Mountpoint) -> /var/lib/postgresql/data",
-        "- Fotos: $($photoVolume.Name) -> $($photoInfo.Mountpoint) -> /app/uploads",
+        'Caminhos informados pelo comando `docker volume inspect` nesta execução.',
         '',
-        'No Docker Desktop, os Mountpoints pertencem ao ambiente Linux do Docker, e nao a uma pasta comum do projeto no Windows.'
+        '| Volume nomeado | Ponto de montagem do Docker | Dentro do conteiner |',
+        '| --- | --- | --- |',
+        "| ``$($dbVolume.Name)`` | ``$($dbInfo.Mountpoint)`` | ``/var/lib/postgresql/data`` no ``db`` |",
+        "| ``$($photoVolume.Name)`` | ``$($photoInfo.Mountpoint)`` | ``/app/uploads`` no ``web`` |",
+        '',
+        'No Docker Desktop para Windows, esses pontos pertencem ao ambiente Linux do Docker.'
     ) | Out-File -LiteralPath (Join-Path $evidenceDir '02-localizacao.md') -Encoding utf8
     $summary += '- PASSOU: volumes inspecionados e fotos listadas em /app/uploads.'
     Save-Text 'resultado.md' $summary
@@ -175,7 +186,7 @@ try {
         }
         foreach ($item in $created) {
             if (@($itemsAfterRemoval | Where-Object { $_.descricao -eq $item.descricao }).Count -gt 0) {
-                throw "O item de teste $($item.id) ainda aparece apos a remocao dos volumes."
+                throw "O item de teste $($item.id) ainda aparece apos a remoção dos volumes."
             }
         }
         $summary += '- PASSOU: down -v apagou itens cadastrados e fotos; init.sql recriou os tres itens de exemplo.'

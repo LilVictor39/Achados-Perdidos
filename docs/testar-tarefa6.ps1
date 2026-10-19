@@ -17,7 +17,7 @@ try {
 
     $nomesRede = @(& docker inspect --format '{{range $name, $network := .NetworkSettings.Networks}}{{println $name}}{{end}}' $webId)
     $nomeRede = $nomesRede[0].Trim()
-    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($nomeRede)) { throw 'Rede do container web nao encontrada.' }
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($nomeRede)) { throw 'Rede do container web não encontrada.' }
     if ($nomeRede -notmatch 'rede_interna$') { throw "Rede inesperada: $nomeRede" }
 
     & docker network inspect $nomeRede 2>&1 | Out-File -FilePath (Join-Path $pastaEvidencias '02-docker-network-inspect.json') -Encoding utf8
@@ -47,6 +47,10 @@ try {
     $resultado = @"
 # TAREFA 6 - evidencias adicionais
 
+Resumo gerado pelo roteiro da execução atual. As saidas originais estão nos links abaixo.
+
+## Saidas registradas
+
 | Evidencia | Legenda |
 | --- | --- |
 | [01-compose-up.txt](01-compose-up.txt) | Subida do ambiente antes da inspecao. |
@@ -57,6 +61,10 @@ try {
 | [06-restaurar-web-1.txt](06-restaurar-web-1.txt) | Retorno do servico web a configuracao de uma replica. |
 | [07-compose-ps-final.txt](07-compose-ps-final.txt) | Estado final dos servicos depois da tentativa de escala. |
 | [08-whoami.txt](08-whoami.txt) | Usuario da aplicacao dentro do container web. |
+
+## Leitura do resultado
+
+O Compose publica a porta 8080 para web. A tentativa de escala teve codigo de saida $codigoEscala; confira a mensagem original em [05-scale-web-3.txt](05-scale-web-3.txt). O roteiro restaurou uma replica e salvou o estado final em [07-compose-ps-final.txt](07-compose-ps-final.txt).
 "@
     Set-Content -LiteralPath (Join-Path $pastaEvidencias 'resultado.md') -Value $resultado -Encoding utf8
     Write-Host "Evidencias salvas em $pastaEvidencias"

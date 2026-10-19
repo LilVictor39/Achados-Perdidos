@@ -1,4 +1,8 @@
-# TAREFA 5 - prova de persistência
+# TAREFA 5 — prova de persistência
+
+**Resultado: as três provas passaram.** Os dois itens cadastrados com foto sobreviveram à recriação dos contêineres; a remoção dos volumes apagou os dados de teste e fez o banco executar `init.sql` novamente.
+
+## Comparação dos estados
 
 | Momento | Itens no banco | Fotos no volume | Evidência |
 | --- | ---: | ---: | --- |
@@ -8,14 +12,16 @@
 | Antes de `docker compose down -v` | 6 | 3 | [Antes da remoção](03-estatisticas-antes-remocao.json) |
 | Após `down -v` e nova subida | 3 | 0 | [Após remoção](03-estatisticas-apos-remocao.json) |
 
-## 1. Recriação dos contêineres — passou
+## 1. Recriação dos contêineres
 
 Os dois [cadastros com foto](01-ids-criados.json) continuaram em [GET /itens](01-itens-apos-up.json) após a recriação. As duas fotos foram recuperadas e seus hashes SHA-256 são idênticos aos do arquivo enviado. O comando `docker compose down` remove contêineres e rede, mas preserva os volumes nomeados.
 
-## 2. Inspeção dos volumes — passou
+## 2. Inspeção dos volumes
 
 O [volume do banco](02-inspect-dados-banco.json) foi montado em `/var/lib/postgresql/data`; o [volume de fotos](02-inspect-fotos.json), em `/app/uploads`. Os caminhos físicos reportados pelo Docker estão em [localização dos volumes](02-localizacao.md). A [listagem de `/app/uploads`](02-ls-uploads.txt) mostrou as três fotos. No Docker Desktop, esses caminhos pertencem ao ambiente Linux do Docker.
 
-## 3. Remoção dos volumes — passou
+## 3. Remoção dos volumes
 
 O [comando `down -v`](03-compose-down-v.txt) removeu os dois volumes do projeto, que ficaram ausentes na [listagem feita imediatamente depois](03-volumes-apos-down-v.txt). Na nova subida, o PostgreSQL criou outro volume e executou `db/init.sql` novamente. Por isso, [GET /itens](03-itens-apos-remocao.json) voltou a mostrar somente os três objetos de exemplo, enquanto as fotos e os itens cadastrados desapareceram.
+
+O roteiro que gerou as saídas está em [`docs/testar-tarefa5.ps1`](../../testar-tarefa5.ps1). Reexecutá-lo com `-RemoverVolumes` apaga os dados dos volumes atuais; consulte o [README principal](../../../README.md) antes de repetir a prova.

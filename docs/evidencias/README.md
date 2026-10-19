@@ -1,6 +1,12 @@
 # Índice de evidências
 
-Os arquivos abaixo registram execuções reais. O [diagrama](../arquitetura.md) e o [relatório](../RELATORIO.md) explicam a configuração examinada.
+Os arquivos abaixo registram execuções reais. Cada link leva à saída original; os resumos explicam o que foi observado. O [diagrama](../arquitetura.md) e o [relatório técnico](../RELATORIO.md) mostram como o ambiente está configurado.
+
+| Etapa | Prova principal | Resultado |
+| --- | --- | --- |
+| [TAREFA 4](tarefa4/resultado.md) | Rotas, cadastro, foto e logs | Todos os testes passaram. |
+| [TAREFA 5](tarefa5/resultado.md) | Persistência e remoção dos volumes | As três provas passaram. |
+| [TAREFA 6](tarefa6/resultado.md) | Rede, imagem, escala e usuário | Evidências coletadas; falha de escala explicada. |
 
 ## TAREFA 4 — testes funcionais
 
@@ -17,7 +23,7 @@ Os arquivos abaixo registram execuções reais. O [diagrama](../arquitetura.md) 
 | [09-estatisticas.json](tarefa4/09-estatisticas.json) | Contagem de itens e fotos após o cadastro. |
 | [10-logs-web.txt](tarefa4/10-logs-web.txt) | Logs da aplicação durante os testes. |
 
-Os arquivos `.status.txt` correspondentes registram o código HTTP de cada resposta. O [resultado da TAREFA 4](tarefa4/resultado.md) resume a aprovação dos testes.
+Os arquivos `.status.txt` correspondentes registram o código HTTP de cada resposta. O [resumo da TAREFA 4](tarefa4/resultado.md) liga cada teste ao resultado.
 
 ## TAREFA 5 — persistência
 
@@ -37,7 +43,7 @@ Os arquivos `.status.txt` correspondentes registram o código HTTP de cada respo
 | [03-itens-apos-remocao.json](tarefa5/03-itens-apos-remocao.json) | Retorno somente dos três itens iniciais. |
 | [03-estatisticas-apos-remocao.json](tarefa5/03-estatisticas-apos-remocao.json) | Contagem de 3 itens e 0 fotos após recriação. |
 
-Os demais arquivos da pasta registram estados intermediários, códigos HTTP, fotos de teste e montagens. O [resultado da TAREFA 5](tarefa5/resultado.md) liga as três provas aos dados observados.
+Os demais arquivos da pasta registram estados intermediários, códigos HTTP, fotos de teste e montagens. O [resumo da TAREFA 5](tarefa5/resultado.md) liga as três provas aos dados observados.
 
 ## TAREFA 6 — rede, imagem e escala
 

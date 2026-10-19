@@ -54,13 +54,15 @@ if ($ApenasLogs) {
             throw 'O arquivo de logs veio vazio.'
         }
         $previous = Get-Content -LiteralPath (Join-Path $evidenceDir 'resultado.md')
-        $updated = @($previous | Where-Object {
-            $_ -notmatch '^- PENDENTE: registrar docker compose logs' -and
-            $_ -notmatch '^- O roteiro PowerShell foi corrigido' -and
-            $_ -notmatch '^- PASSOU: logs da aplicacao'
-        })
-        $updated += '- PASSOU: logs da aplicacao registrados (10).'
-        Save-Text 'resultado.md' $updated
+        if (@($previous -match '^\| Logs da aplica').Count -eq 0) {
+            $updated = @($previous | Where-Object {
+                $_ -notmatch '^- PENDENTE: registrar docker compose logs' -and
+                $_ -notmatch '^- O roteiro PowerShell foi corrigido' -and
+                $_ -notmatch '^- PASSOU: logs da aplicacao'
+            })
+            $updated += '- PASSOU: logs da aplicacao registrados (10).'
+            Save-Text 'resultado.md' $updated
+        }
         Write-Host 'TAREFA 4 concluida. Veja docs/evidencias/tarefa4/resultado.md.'
     } catch {
         Write-Host "PENDENTE: $($_.Exception.Message)"
@@ -71,7 +73,14 @@ if ($ApenasLogs) {
     exit 0
 }
 
-$summary = @('# TAREFA 4 - testes funcionais', '')
+$summary = @(
+    '# TAREFA 4 - testes funcionais',
+    '',
+    'Resumo gerado pelo roteiro da execução atual. As respostas e saidas originais estão nos arquivos numerados desta pasta.',
+    '',
+    '## Verificações',
+    ''
+)
 Push-Location $projectRoot
 try {
     Run-Docker '01-compose-up.txt' @('compose', 'up', '-d', '--build') | Out-Null

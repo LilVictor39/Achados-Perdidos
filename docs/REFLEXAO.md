@@ -1,5 +1,9 @@
 # Reflexão e equivalência em nuvem — TAREFA 6
 
+As respostas abaixo relacionam os conceitos do enunciado à configuração real do projeto. Os comandos e resultados citados podem ser conferidos nas [evidências](evidencias/README.md).
+
+> As medidas de proteção e os serviços de nuvem mencionados aqui são propostas de evolução. A implementação entregue é o ambiente local descrito no [README](../README.md).
+
 ## Q1. Nome `db` e resolução
 
 - Em [`docker-compose.yml`](../docker-compose.yml), `web` e `db` estão na mesma `rede_interna`.
@@ -38,7 +42,7 @@
 ## Q6. Porta do banco e proteção de fotos
 
 - O [Compose](../docker-compose.yml) publica apenas `8080:5000`; a porta 5432 fica acessível pela rede interna para `web`, reduzindo a exposição direta do PostgreSQL no host.
-- Uma foto de RG ou carteira pode conter dados pessoais; a [LGPD, art. 46](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm), exige medidas técnicas e administrativas de proteção contra acesso não autorizado e situações acidentais ou ilícitas.
+- Uma foto de RG ou carteira pode conter dados pessoais; o [art. 46 da LGPD](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/L13709.htm) exige medidas técnicas e administrativas contra acesso não autorizado e situações acidentais ou ilícitas.
 - Medida adicional 1: exigir autenticação e autorização para cadastrar e consultar fotos, inclusive em `GET /fotos/<nome>`.
 - Medida adicional 2: criptografar dados e backups, restringindo as permissões de acesso às chaves e definindo prazo de retenção para as fotos.
 - O código atual fornece a rota de foto sem autenticação; essas medidas são propostas para uma implantação real, não características já implementadas.
@@ -51,6 +55,8 @@
 - Um volume `fotos` compartilhado pode ser tecnicamente montado nas três réplicas de um mesmo host, mas exige escrita concorrente e acesso consistentes. Para escala em vários hosts, prefira armazenamento de objetos e adapte o código. O UUID reduz colisões de nomes, mas não resolve todos os problemas de consistência.
 
 ## 5.1. Do ambiente local para a nuvem
+
+Equivalência **funcional** dos componentes; nomes e configurações mudam conforme o provedor.
 
 | Peça local | Microsoft Azure | AWS | Google Cloud |
 | --- | --- | --- | --- |
